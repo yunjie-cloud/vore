@@ -3,9 +3,10 @@ session_start();
 require_once 'vendor/autoload.php'; // Google API client library
 
 // Replace with your Google API credentials
-$clientID = "YOUR_GOOGLE_CLIENT_ID";
-$clientSecret = "YOUR_GOOGLE_CLIENT_SECRET";
-$redirectUri = "http://localhost/google_login.php"; // must match Google Console
+$clientID = "547972795933-g4avtjaigfvdjdqapfv1ihqem0cndd09.apps.googleusercontent.com";
+$clientSecret = "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";
+$redirectUri = "https://vore-virtual-assistant.gt.tc/google_login.php";
+ // must match Google Console
 
 // Create Client
 $client = new Google_Client();
