@@ -14,7 +14,7 @@
       <input type="password" name="password" placeholder="Password" required><br>
       <button type="submit" name="signup">Sign Up</button>
     </form>
-    <a href="index.html" class="back-btn">← Back to Home</a>
+    <a href="index.html" class="back-btn">Back to Home</a>
   </div>
 </body>
 </html>

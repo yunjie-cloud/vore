@@ -20,7 +20,7 @@
 </div>
 
     </form>
-    <a href="index.html" class="back-btn">← Back to Home</a>
+    <a href="index.html" class="back-btn">Back to Home</a>
   </div>
 </body>
 </html>
