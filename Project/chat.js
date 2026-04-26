@@ -1,23 +1,28 @@
 document.getElementById("chat-form").addEventListener("submit", async function(e) {
   e.preventDefault();
-  const input = document.getElementById("user-input");
+  const input = document.getElementById("chat-input");
   const message = input.value;
+  const chatMessages = document.getElementById("chat-messages");
 
   // Show user message
-  const chatBox = document.getElementById("chat-box");
-  chatBox.innerHTML += `<div class="message user">${message}</div>`;
+  chatMessages.innerHTML += `<div><strong>You:</strong> ${message}</div>`;
   input.value = "";
 
-  // Send to backend
-  const response = await fetch("groq_chat.php", {
-    method: "POST",
-    headers: { "Content-Type": "application/x-www-form-urlencoded" },
-    body: "message=" + encodeURIComponent(message)
-  });
+  try {
+    const response = await fetch("groq_chat.php", {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: "message=" + encodeURIComponent(message)
+    });
 
-  const data = await response.text();
+    // 👉 Paste the debug line here
+    const reply = await response.text();
+    console.log("Backend reply:", reply);
 
-  // Show assistant reply
-  chatBox.innerHTML += `<div class="message assistant">${data}</div>`;
-  chatBox.scrollTop = chatBox.scrollHeight;
+    // Show assistant reply
+    chatMessages.innerHTML += `<div><strong>Assistant:</strong> ${reply}</div>`;
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+  } catch (err) {
+    chatMessages.innerHTML += `<div><strong>Assistant:</strong> Error: ${err.message}</div>`;
+  }
 });

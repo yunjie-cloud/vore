@@ -291,3 +291,55 @@ button:hover {
 .google-btn:hover {
   background: #f4f4f4;
 }
+/* Prevent the whole page from scrolling */
+html, body {
+  height: 100%;
+  margin: 0;
+  overflow: hidden;   /* ✅ no global scrollbar */
+}
+
+/* Layout: sidebar + chat box */
+.chat-layout {
+  display: flex;
+  height: 100%;       /* ✅ fill the viewport */
+}
+
+/* Sidebar scrolls independently */
+.chat-history {
+  flex: 0 0 280px;    /* fixed width */
+  border-right: 1px solid #ccc;
+  padding: 15px;
+  overflow-y: auto;   /* ✅ only sidebar scrolls */
+  box-sizing: border-box;
+}
+
+/* Chat container centered */
+.chat-container {
+  flex: 1;
+  display: flex;
+  justify-content: center; /* ✅ center horizontally */
+  align-items: center;     /* ✅ center vertically */
+}
+
+/* Chat box card */
+.chat-area {
+  width: 900px;
+  max-width: 100%;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Messages scroll inside the box */
+#chat-area {
+  flex: 1;
+  min-height: 150px;
+  max-height: 150px;
+  overflow-y: auto;   /* ✅ scroll only inside chat box */
+  border: 1px solid #ccc;
+  padding: 10px;
+  margin-bottom: 15px;
+}

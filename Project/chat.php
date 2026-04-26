@@ -1,10 +1,25 @@
 <?php
 session_start();
+
+// Redirect if not logged in
 if (!isset($_SESSION['user_id'])) {
-    // Redirect to login if not logged in
     header("Location: login.php");
     exit();
 }
+
+// Include your db.php file
+require_once "db.php";
+
+// Fetch chat history for this user
+$stmt = $conn->prepare("SELECT role, message, timestamp 
+                        FROM chat_history 
+                        WHERE user_id = ? 
+                        ORDER BY timestamp ASC");
+$stmt->bind_param("i", $_SESSION['user_id']);
+$stmt->execute();
+$result = $stmt->get_result();
+$history = $result->fetch_all(MYSQLI_ASSOC);
+$stmt->close();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -22,13 +37,15 @@ if (!isset($_SESSION['user_id'])) {
     </nav>
   </header>
 
-  <section class="chat-container">
-    <h2>Welcome, <?php echo $_SESSION['username']; ?>!</h2>
-    <div id="chat-area"></div>
-    <form id="chat-form">
-      <input type="text" id="chat-input" placeholder="Type your question..." required>
-      <button type="submit">Send</button>
-    </form>
+  <section class="chat-layout">
+    <section class="chat-area">
+      <h2>Welcome, <?php echo $_SESSION['username']; ?>!</h2>
+      <div id="chat-area"></div>
+      <form id="chat-form">
+        <input type="text" id="chat-input" placeholder="Type your question..." required>
+        <button type="submit">Send</button>
+      </form>
+    </section>
   </section>
 
   <script>
@@ -37,20 +54,24 @@ if (!isset($_SESSION['user_id'])) {
       const input = document.getElementById("chat-input").value;
       const chatArea = document.getElementById("chat-area");
 
-      // Display user message
+      // Display user message immediately
       chatArea.innerHTML += `<div><strong>You:</strong> ${input}</div>`;
 
-      // Simulated AI response (replace later with real backend)
-      let response = "This is a placeholder response. Later, I’ll connect to municipal FAQs or AI backend.";
-      if (input.toLowerCase().includes("permit")) {
-        response = "You can request permits at the Municipal Hall or through our online portal.";
-      } else if (input.toLowerCase().includes("hours")) {
-        response = "Municipal services are available 24/7 through this assistant.";
-      }
-
-      chatArea.innerHTML += `<div><strong>Assistant:</strong> ${response}</div>`;
-      document.getElementById("chat-input").value = "";
-      chatArea.scrollTop = chatArea.scrollHeight;
+      // Send message to Groq backend
+      fetch("groq_chat.php", {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: "message=" + encodeURIComponent(input)
+      })
+      .then(response => response.text())
+      .then(data => {
+        chatArea.innerHTML += `<div><strong>Assistant:</strong> ${data}</div>`;
+        document.getElementById("chat-input").value = "";
+        chatArea.scrollTop = chatArea.scrollHeight;
+      })
+      .catch(error => {
+        chatArea.innerHTML += `<div><strong>Assistant:</strong> Error: ${error}</div>`;
+      });
     });
   </script>
 </body>

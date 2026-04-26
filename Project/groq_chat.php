@@ -1,12 +1,19 @@
 <?php
-$apiKey = "YOUR_GROQ_API_KEY"; 
-$model = "llama3-8b-8192";
+session_start();
+require_once "db.php"; 
+// brings in $conn
+
+// Replace with your actual Groq API key
+$apiKey = "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"; 
+$model = "llama-3.1-8b-instant"; // supported Groq model
+
+$userMessage = $_POST['message'] ?? '';
 
 $data = [
     "model" => $model,
     "messages" => [
-        ["role" => "system", "content" => "You are a helpful assistant."],
-        ["role" => "user", "content" => "Hello Groq, can you reply?"]
+        ["role" => "system", "content" => "You are Catbalogan’s helpful municipal assistant."],
+        ["role" => "user", "content" => $userMessage]
     ]
 ];
 
@@ -17,17 +24,21 @@ curl_setopt($ch, CURLOPT_HTTPHEADER, [
     "Content-Type: application/json"
 ]);
 
-// SSL options (important for XAMPP/Windows)
-curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
-curl_setopt($ch, CURLOPT_CAINFO, "C:/xampp/php/extras/ssl/cacert.pem"); // adjust path if needed
+// Force CA file, fallback disable for local testing
+$caPath = "C:\xampp\php\extras\ssl\cacert.pem";
+if (file_exists($caPath)) {
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
+    curl_setopt($ch, CURLOPT_CAINFO, $caPath);
+} else {
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+}
 
-// Send JSON payload
+curl_setopt($ch, CURLOPT_POST, true);
 curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
 
-// Execute request
 $response = curl_exec($ch);
 
-// Error handling
 if ($response === false) {
     echo "cURL error: " . curl_error($ch);
     curl_close($ch);
@@ -36,18 +47,34 @@ if ($response === false) {
 
 curl_close($ch);
 
-// Decode JSON safely
 $result = json_decode($response, true);
 
-if ($result === null) {
-    echo "Failed to decode JSON response.";
+// Debug: dump raw response if parsing fails
+if (!$result) {
+    echo "Invalid JSON response: " . $response;
     exit;
 }
 
-// Safely access the API response
-if (isset($result["choices"][0]["message"]["content"])) {
-    echo $result["choices"][0]["message"]["content"];
-} else {
-    echo "No content returned from API.";
+if (isset($result["error"])) {
+    echo "API error: " . $result["error"]["message"];
+    exit;
 }
-?>
+
+// Flexible parsing
+$assistantReply = null;
+if (isset($result["choices"][0]["message"]["content"])) {
+    $assistantReply = $result["choices"][0]["message"]["content"];
+} elseif (isset($result["choices"][0]["delta"]["content"])) {
+    $assistantReply = $result["choices"][0]["delta"]["content"];
+} elseif (isset($result["choices"][0]["text"])) {
+    $assistantReply = $result["choices"][0]["text"];
+} elseif (isset($result["choices"][0]["content"])) {
+    $assistantReply = $result["choices"][0]["content"];
+}
+
+// Final output
+if ($assistantReply) {
+    echo $assistantReply;
+} else {
+    echo "No content returned from API. Raw response: " . $response;
+}

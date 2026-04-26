@@ -2,46 +2,219 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Municipality of Catbalogan - Virtual Assistant</title>
-  <link rel="stylesheet" href="style.css">
+  <title>AI Virtual Assistant - Municipality of Catbalogan</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+    body {
+      background: #f5f5f5;
+    }
+    .container {
+      display: flex;
+      height: 100vh;
+    }
+    /* Sidebar */
+    .sidebar {
+      width: 260px;
+      background: orange;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 20px;
+    }
+    .logo-top {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .logo-top img {
+      width: 100px;
+      border-radius: 50%;
+    }
+    .sidebar h2 {
+      text-align: center;
+      margin: 10px 0;
+    }
+    .sidebar a {
+      color: white;
+      text-decoration: none;
+      margin: 8px 0;
+      display: block;
+    }
+    .sidebar a:hover {
+      text-decoration: underline;
+    }
+    .footer-box {
+      background: orange;
+      padding: 15px;
+      text-align: center;
+    }
+    .footer-box img {
+      max-width: 100px;
+      margin-bottom: 10px;
+    }
+    .footer-box .slogan {
+      font-size: 0.9em;
+    }
+    /* Main */
+    .main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      padding: 20px;
+    }
+    header {
+      background: orange;
+      padding: 15px;
+      border-bottom: 1px solid #ddd;
+      text-align: center;
+    }
+    #chat-messages {
+      flex: 1;
+      overflow-y: auto;
+      background: white;
+      border-radius: 8px;
+      padding: 15px;
+      margin-bottom: 10px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+    .timestamp {
+      font-size: 0.8em;
+      color: #888;
+      margin-left: 10px;
+    }
+    #chat-form {
+      display: flex;
+    }
+    #chat-input {
+      flex: 1;
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+    }
+    #chat-form button {
+      margin-left: 10px;
+      padding: 10px 20px;
+      background: orange;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    #suggestions {
+      margin-top: 10px;
+    }
+    .suggestion-btn {
+      background: #ffe0cc;
+      border: none;
+      border-radius: 6px;
+      padding: 10px 15px;
+      margin: 5px 5px 0 0;
+      cursor: pointer;
+      font-size: 0.9em;
+      display: inline-block;
+      text-align: left;
+    }
+    .suggestion-btn small {
+      display: block;
+      font-size: 0.8em;
+      color: #333;
+    }
+  </style>
 </head>
 <body>
-  <header>
-    <h1>Municipality of Catbalogan</h1>
-    <nav>
-      <a href="login.php">Login</a>
-      <a href="signup.php">Sign Up</a>
-    </nav>
-  </header>
+  <div class="container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <!-- Logo at the top -->
+      <div class="logo-top">
+        <img src="top_logo.png" alt="Municipality of Catbalogan Seal">
+      </div>
+      <h2>Catbalogan</h2>
+      <a href="#">Home</a>
+      <a href="#">Services</a>
+      <a href="#">FAQs</a>
+      <a href="#">Announcements</a>
+      <a href="#">Local Information</a>
+      <a href="#">Feedback</a>
+      <a href="#">Dark Mode</a>
+      <a href="#">About</a>
+      <!-- Logo + slogan at the bottom -->
+      <div class="footer-box">
+        <img src="catbalogan.png" alt="Municipality of Catbalogan Logo">
+        <div class="slogan">Municipality of Catbalogan – Together, we build progress.</div>
+      </div>
+    </aside>
 
-  <section class="hero">
-    <h2>AI-BASED VIRTUAL ASSISTANT</h2>
-    <p>Access Information and get answers instantly with our new AI-powered virtual assistant.</p>
-     <button class="chat-btn" onclick="window.location.href='chat.php'">
-    Start Chatting
-  </button>
-    <button onclick="window.location.href='signup.php'">Create Account</button>
+    <!-- Main content -->
+    <main class="main">
+      <header>
+        <h1>AI Virtual Assistant</h1>
+        <p>Municipality of Catbalogan<br>Your 24/7 digital assistant for a better Catbalogan.</p>
+      </header>
 
+      <div id="chat-messages">
+        <div><strong>You:</strong> What are the requirements for a Business Permit in Catbalogan? <span class="timestamp">10:30 AM</span></div>
+        <div><strong>Assistant:</strong> To apply for a Business Permit in Catbalogan, you will need:<br>
+          • Business Permit Application Form<br>
+          • Valid ID<br>
+          • Barangay Clearance<br>
+          • Mayor’s Permit<br>
+          • Proof of Business Address<br>
+          • BIR Certificate<br><br>
+          Would you like me to provide the step-by-step process or the associated fees?
+          <span class="timestamp">10:30 AM</span>
+        </div>
+      </div>
 
-<!-- New Features Section -->
-<section class="features">
-  <div class="card">
-    <div class="icon">💬</div>
-    <h3>Instant Answers</h3>
-    <p>Get immediate responses to common questions about municipal services and procedures.</p>
+      <form id="chat-form">
+        <input type="text" id="chat-input" placeholder="Ask me anything..." required>
+        <button type="submit">Send</button>
+      </form>
+
+      <div id="suggestions">
+        <button class="suggestion-btn">Business Permit Requirements<br><small>Learn about requirements and process</small></button>
+        <button class="suggestion-btn">Garbage Collection Schedule<br><small>Find out the schedule in your area</small></button>
+        <button class="suggestion-btn">Local Government Services<br><small>Explore services offered by the LGU</small></button>
+        <button class="suggestion-btn">Events & Announcements<br><small>See the latest updates and events</small></button>
+      </div>
+    </main>
   </div>
-  <div class="card">
-    <div class="icon">🛡️</div>
-    <h3>Secure Access</h3>
-    <p>Your data is protected. Create an account to securely track your requests and history.</p>
-  </div>
-  <div class="card">
-    <div class="icon">⏰</div>
-    <h3>Always Available</h3>
-    <p>Access municipal information 24 hours a day, 7 days a week, from any device.</p>
-  </div>
-</section>
 
-  </section>
+  <script>
+    document.getElementById("chat-form").addEventListener("submit", async function(e) {
+      e.preventDefault();
+      const input = document.getElementById("chat-input");
+      const message = input.value;
+      const chatMessages = document.getElementById("chat-messages");
+
+      chatMessages.innerHTML += `<div><strong>You:</strong> ${message} <span class="timestamp">${new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</span></div>`;
+      input.value = "";
+
+      try {
+        const response = await fetch("groq_chat.php", {
+          method: "POST",
+          headers: { "Content-Type": "application/x-www-form-urlencoded" },
+          body: "message=" + encodeURIComponent(message)
+        });
+        const reply = await response.text();
+        chatMessages.innerHTML += `<div><strong>Assistant:</strong> ${reply} <span class="timestamp">${new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</span></div>`;
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+      } catch (err) {
+        chatMessages.innerHTML += `<div><strong>Assistant:</strong> Error: ${err.message}</div>`;
+      }
+    });
+
+    document.querySelectorAll(".suggestion-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        document.getElementById("chat-input").value = btn.textContent.split("\n")[0];
+        document.getElementById("chat-form").dispatchEvent(new Event("submit"));
+      });
+    });
+  </script>
 </body>
 </html>
