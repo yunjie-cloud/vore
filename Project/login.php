@@ -26,23 +26,25 @@
 </html>
 
 <?php
-if (isset($_POST['login'])) {
-    $email = $_POST['email'];
-    $password = $_POST['password'];
+include 'db.php'; // your database connection
 
-    $sql = "SELECT * FROM users WHERE email='$email'";
-    $result = $conn->query($sql);
+$email = $_POST['email'];
+$password = $_POST['password'];
 
-    if ($result->num_rows > 0) {
-        $row = $result->fetch_assoc();
-        if (password_verify($password, $row['password'])) {
-            echo "<script>alert('Login successful! Welcome ".$row['username']."'); window.location='index.html';</script>";
-        } else {
-            echo "<script>alert('Invalid password.');</script>";
-        }
-    } else {
-        echo "<script>alert('No account found with that email.');</script>";
-    }
+$sql = "SELECT * FROM users WHERE email='$email' AND password='$password'";
+$result = $conn->query($sql);
+
+if ($result === false) {
+    // Debugging: show SQL error
+    echo "Database query failed: " . $conn->error;
+    exit;
+}
+
+if ($result->num_rows > 0) {
+    // Login success
+    $row = $result->fetch_assoc();
+    echo "Welcome, " . $row['email'];
+} else {
+    echo "No account found with that email.";
 }
 ?>
-
